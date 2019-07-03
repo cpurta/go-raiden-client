@@ -1,3 +1,5 @@
+// Package raidenclient creates a generic client to access sub-clients that
+// correspond to the various API calls that any Raiden node supports.
 package raidenclient
 
 import (
@@ -11,6 +13,9 @@ import (
 	"github.com/cpurta/go-raiden-client/tokens"
 )
 
+// NewClient will return a Raiden client that is able to access all of the API
+// calls that are currently available on a Raiden node. This provides access to
+// the various sub-clients that correspond to the various API calls available.
 func NewClient(config *config.Config, httpClient *http.Client) *Client {
 	return &Client{
 		AddressClient:     address.NewClient(config, httpClient),
@@ -21,6 +26,8 @@ func NewClient(config *config.Config, httpClient *http.Client) *Client {
 	}
 }
 
+// Client provides access to API sub-clients that correspond to the various API
+// calls that a Raiden node supports.
 type Client struct {
 	AddressClient     *address.Client
 	TokensClient      *tokens.Client
@@ -29,22 +36,32 @@ type Client struct {
 	ConnectionsClient *connections.Client
 }
 
+// Address returns the Address sub-client to access the address being used by the
+// Raiden node.
 func (client *Client) Address() *address.Client {
 	return client.AddressClient
 }
 
+// Tokens returns the Tokens sub-client that will be able to register, get, and
+// list token networks.
 func (client *Client) Tokens() *tokens.Client {
 	return client.TokensClient
 }
 
+// Channels returns the Channels sub-client that will be able to open, close and
+// increase the deposit of a micro-payment channel.
 func (client *Client) Channels() *channels.Client {
 	return client.ChannelsClient
 }
 
+// Payments returns the Payments sub-client that will be able to query all of the
+// pending payments.
 func (client *Client) Payments() *payments.Client {
 	return client.PaymentsClient
 }
 
+// Connections returns the Connections sub-client that will be able to list, join
+// and leave token networks.
 func (client *Client) Connections() *connections.Client {
 	return client.ConnectionsClient
 }

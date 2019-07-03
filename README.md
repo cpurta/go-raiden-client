@@ -1,5 +1,8 @@
 # go-raiden-client
 
+[![GoDoc](https://godoc.org/github.com/cpurta/go-raiden-client?status.svg)](https://godoc.org/github.com/cpurta/go-raiden-client)
+[![CircleCI](https://circleci.com/gh/cpurta/go-raiden-client?style=svg)](https://circleci.com/gh/cpurta/go-raiden-client)
+
 A client for a Raiden node written in Go. This is meant to be used for backend
 development environments where you are able to connect to running Raiden node(s).
 
@@ -37,10 +40,10 @@ func main() {
 
 	// get our token address from the raiden node
 	if address, err = raidenClient.Address().Get(context.TODO()); err != nil {
-		log.Println("there was an error getting raiden token address:", err.Error())
+		log.Println("there was an error getting raiden address:", err.Error())
 	}
 
-	log.Println("raiden token address:", address.Hex())
+	log.Println("raiden address:", address.Hex())
 }
 ```
 
