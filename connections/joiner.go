@@ -72,7 +72,7 @@ func (joiner *defaultJoiner) Join(ctx context.Context, tokenAddress common.Addre
 		return err
 	}
 
-	if response.StatusCode != 204 {
+	if response.StatusCode != http.StatusNoContent {
 		return fmt.Errorf("recieved %d status code: %s", response.StatusCode, string(responseBody))
 	}
 

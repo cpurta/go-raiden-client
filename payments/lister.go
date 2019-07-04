@@ -73,6 +73,7 @@ func (lister *defaultLister) List(ctx context.Context, tokenAddress, targetAddre
 			EventName:  event.EventName,
 			Amount:     event.Amount,
 			Initiator:  common.HexToAddress(event.Initiator),
+			Target:     common.HexToAddress(event.Target),
 			Identifier: event.Identifier,
 			LogTime:    logTime,
 		})

@@ -10,6 +10,7 @@ import (
 	"github.com/cpurta/go-raiden-client/config"
 	"github.com/cpurta/go-raiden-client/connections"
 	"github.com/cpurta/go-raiden-client/payments"
+	"github.com/cpurta/go-raiden-client/pending_transfers"
 	"github.com/cpurta/go-raiden-client/tokens"
 )
 
@@ -18,22 +19,24 @@ import (
 // the various sub-clients that correspond to the various API calls available.
 func NewClient(config *config.Config, httpClient *http.Client) *Client {
 	return &Client{
-		AddressClient:     address.NewClient(config, httpClient),
-		TokensClient:      tokens.NewClient(config, httpClient),
-		ChannelsClient:    channels.NewClient(config, httpClient),
-		PaymentsClient:    payments.NewClient(config, httpClient),
-		ConnectionsClient: connections.NewClient(config, httpClient),
+		AddressClient:          address.NewClient(config, httpClient),
+		TokensClient:           tokens.NewClient(config, httpClient),
+		ChannelsClient:         channels.NewClient(config, httpClient),
+		PaymentsClient:         payments.NewClient(config, httpClient),
+		ConnectionsClient:      connections.NewClient(config, httpClient),
+		PendingTransfersClient: pendingtransfers.NewClient(config, httpClient),
 	}
 }
 
 // Client provides access to API sub-clients that correspond to the various API
 // calls that a Raiden node supports.
 type Client struct {
-	AddressClient     *address.Client
-	TokensClient      *tokens.Client
-	ChannelsClient    *channels.Client
-	PaymentsClient    *payments.Client
-	ConnectionsClient *connections.Client
+	AddressClient          *address.Client
+	TokensClient           *tokens.Client
+	ChannelsClient         *channels.Client
+	PaymentsClient         *payments.Client
+	ConnectionsClient      *connections.Client
+	PendingTransfersClient *pendingtransfers.Client
 }
 
 // Address returns the Address sub-client to access the address being used by the
@@ -64,4 +67,10 @@ func (client *Client) Payments() *payments.Client {
 // and leave token networks.
 func (client *Client) Connections() *connections.Client {
 	return client.ConnectionsClient
+}
+
+// PendingTransfers returns the PendingTransfers sub-client that will be able to
+// query all pending transfers by token or a channel.
+func (client *Client) PendingTransfers() *pendingtransfers.Client {
+	return client.PendingTransfersClient
 }
