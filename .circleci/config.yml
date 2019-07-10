@@ -23,3 +23,9 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+      - run:
+          name: Coverage
+          command: |
+              go test -cover -coverprofile=coverage.txt
+              go get github.com/mattn/goveralls
+              goveralls -service=circleci -coverprofile=coverage.txt -repotoken=$COVERALLS_REPO_TOKEN
