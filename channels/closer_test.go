@@ -3,7 +3,9 @@ package channels
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/cpurta/go-raiden-client/config"
@@ -15,11 +17,16 @@ import (
 
 func TestCloser(t *testing.T) {
 	var (
-		config = &config.Config{
+		localhostIP = "[::1]"
+		config      = &config.Config{
 			Host:       "http://localhost:5001",
 			APIVersion: "v1",
 		}
 	)
+
+	if os.Getenv("USE_IPV4") != "" {
+		localhostIP = "127.0.0.1"
+	}
 
 	type testcase struct {
 		name            string
@@ -74,7 +81,7 @@ func TestCloser(t *testing.T) {
 			prepHTTPMock: func() {
 				httpmock.Deactivate()
 			},
-			expectedError:   errors.New("Patch http://localhost:5001/api/v1/channels/0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8/0x61C808D82A3Ac53231750daDc13c777b59310bD9: dial tcp [::1]:5001: connect: connection refused"),
+			expectedError:   fmt.Errorf("Patch http://localhost:5001/api/v1/channels/0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8/0x61C808D82A3Ac53231750daDc13c777b59310bD9: dial tcp %s:5001: connect: connection refused", localhostIP),
 			expectedChannel: &Channel{},
 		},
 	}

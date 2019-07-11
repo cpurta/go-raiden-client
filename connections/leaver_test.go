@@ -3,7 +3,9 @@ package connections
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/cpurta/go-raiden-client/config"
@@ -15,11 +17,16 @@ import (
 
 func TestLeaver(t *testing.T) {
 	var (
-		config = &config.Config{
+		localhostIP = "[::1]"
+		config      = &config.Config{
 			Host:       "http://localhost:5001",
 			APIVersion: "v1",
 		}
 	)
+
+	if os.Getenv("USE_IPV4") != "" {
+		localhostIP = "127.0.0.1"
+	}
 
 	type testcase struct {
 		name              string
@@ -69,7 +76,7 @@ func TestLeaver(t *testing.T) {
 				httpmock.Deactivate()
 			},
 			expectedAddresses: []common.Address{},
-			expectedError:     errors.New("Delete http://localhost:5001/api/v1/connections/0x2a65Aca4D5fC5B5C859090a6c34d164135398226: dial tcp [::1]:5001: connect: connection refused"),
+			expectedError:     fmt.Errorf("Delete http://localhost:5001/api/v1/connections/0x2a65Aca4D5fC5B5C859090a6c34d164135398226: dial tcp %s:5001: connect: connection refused", localhostIP),
 		},
 	}
 

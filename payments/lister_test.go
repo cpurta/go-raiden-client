@@ -3,7 +3,9 @@ package payments
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -16,6 +18,8 @@ import (
 
 func TestLister(t *testing.T) {
 	var (
+		localhostIP = "[::1]"
+
 		config = &config.Config{
 			Host:       "http://localhost:5001",
 			APIVersion: "v1",
@@ -25,6 +29,10 @@ func TestLister(t *testing.T) {
 		time2, _ = time.Parse(time.RFC3339, "2018-10-30T07:04:22.293Z")
 		time3, _ = time.Parse(time.RFC3339, "2018-10-30T07:10:13.122Z")
 	)
+
+	if os.Getenv("USE_IPV4") != "" {
+		localhostIP = "127.0.0.1"
+	}
 
 	type testcase struct {
 		name           string
@@ -91,7 +99,7 @@ func TestLister(t *testing.T) {
 			prepHTTPMock: func() {
 				httpmock.Deactivate()
 			},
-			expectedError:  errors.New("Get http://localhost:5001/api/v1/payments/0x0f114A1E9Db192502E7856309cc899952b3db1ED/0x82641569b2062B545431cF6D7F0A418582865ba7: dial tcp [::1]:5001: connect: connection refused"),
+			expectedError:  fmt.Errorf("Get http://localhost:5001/api/v1/payments/0x0f114A1E9Db192502E7856309cc899952b3db1ED/0x82641569b2062B545431cF6D7F0A418582865ba7: dial tcp %s:5001: connect: connection refused", localhostIP),
 			expectedEvents: nil,
 		},
 	}
