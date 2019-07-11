@@ -27,6 +27,6 @@ jobs:
           name: Coverage
           command: |
               export USE_IPV4=true
-              go test -cover -coverprofile=coverage.txt
+              go test -cover -coverprofile=coverage.txt ./...
               go get github.com/mattn/goveralls
               goveralls -service=circleci -coverprofile=coverage.txt -repotoken=$COVERALLS_REPO_TOKEN
