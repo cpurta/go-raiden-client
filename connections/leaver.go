@@ -12,10 +12,12 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+// Leaver is an interface to leave a token network.
 type Leaver interface {
 	Leave(ctx context.Context, tokenAddress common.Address) ([]common.Address, error)
 }
 
+// NewLeaver will create a default leaver that will allow one to Leave a token network.
 func NewLeaver(config *config.Config, httpClient *http.Client) Leaver {
 	return &defaultLeaver{
 		baseClient: &util.BaseClient{
@@ -29,6 +31,7 @@ type defaultLeaver struct {
 	baseClient *util.BaseClient
 }
 
+// Leave will leave a token network.
 func (leaver *defaultLeaver) Leave(ctx context.Context, tokenAddress common.Address) ([]common.Address, error) {
 	var (
 		err            error

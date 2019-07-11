@@ -14,6 +14,8 @@ type channel struct {
 	RevealTimeout          int64  `json:"reveal_timeout"`
 }
 
+// Channel represents a payment channel between two ethereum addresses. This contains
+// high level information about the network, partners, the token being used.
 type Channel struct {
 	TokenNetworkIdentifier common.Address
 	ChannelIdentifier      int64

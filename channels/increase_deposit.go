@@ -17,10 +17,14 @@ type increaseDepositRequest struct {
 	TotalDeposit int64 `json:"total_deposit"`
 }
 
+// IncreaseDepositor represents a generic interface to Increase the Deposit of a Payment Channel given a token and
+// partner address.
 type IncreaseDepositor interface {
 	IncreaseDeposit(ctx context.Context, tokenAddress, partnerAddress common.Address, deposit int64) (*Channel, error)
 }
 
+// NewIncreaseDepositor creates a new default Channel depositor increaser given a Raiden node configuration
+// and an http client.
 func NewIncreaseDepositor(config *config.Config, httpClient *http.Client) IncreaseDepositor {
 	return &defaultIncreaseDepositor{
 		baseClient: &util.BaseClient{
@@ -34,6 +38,7 @@ type defaultIncreaseDepositor struct {
 	baseClient *util.BaseClient
 }
 
+// Close will increase the deposit a payment channel given a token address and a partner address.
 func (depositor *defaultIncreaseDepositor) IncreaseDeposit(ctx context.Context, tokenAddress, partnerAddress common.Address, deposit int64) (*Channel, error) {
 	var (
 		err     error

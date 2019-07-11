@@ -17,12 +17,15 @@ var (
 	_           Lister = &defaultLister{}
 )
 
+// Lister is an interface that allows for various list operations to be performed.
 type Lister interface {
 	ListAll(context.Context) ([]*Transfer, error)
 	ListToken(context.Context, common.Address) ([]*Transfer, error)
 	ListChannel(context.Context, common.Address, common.Address) ([]*Transfer, error)
 }
 
+// NewLister will return a default lister that will be able to perform the various
+// listing operations of all pending transfers know by a Raiden node.
 func NewLister(config *config.Config, httpClient *http.Client) Lister {
 	return &defaultLister{
 		baseClient: &util.BaseClient{
@@ -36,6 +39,7 @@ type defaultLister struct {
 	baseClient *util.BaseClient
 }
 
+// ListAll will list all currently pending transfers on the Raiden node.
 func (lister *defaultLister) ListAll(ctx context.Context) ([]*Transfer, error) {
 	var (
 		url *url.URL

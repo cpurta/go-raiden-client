@@ -17,10 +17,14 @@ type channelCloseRequest struct {
 	State string `json:"state"`
 }
 
+// Closer represents a generic interface to Close a Payment Channel given a token and
+// partner address.
 type Closer interface {
 	Close(ctx context.Context, tokenAddress, partnerAddress common.Address) (*Channel, error)
 }
 
+// NewCloser creates a new default Channel closer given a Raiden node configuration
+// and an http client.
 func NewCloser(config *config.Config, httpClient *http.Client) Closer {
 	return &defaultCloser{
 		baseClient: &util.BaseClient{
@@ -34,6 +38,7 @@ type defaultCloser struct {
 	baseClient *util.BaseClient
 }
 
+// Close will close a payment channel given a token address and a partner address.
 func (closer *defaultCloser) Close(ctx context.Context, tokenAddress, partnerAddress common.Address) (*Channel, error) {
 	var (
 		err     error

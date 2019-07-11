@@ -20,10 +20,14 @@ type channelOpenRequest struct {
 	SettleTimeout  int64  `json:"settle_timeout"`
 }
 
+// Opener represents a generic interface to Open a Payment Channel given a token,
+// partner address, deposit and a settle timeout.
 type Opener interface {
 	Open(ctx context.Context, tokenAddress, partnerAddress common.Address, deposit, settleTimeout int64) (*Channel, error)
 }
 
+// NewOpener creates a new default Channel opener given a Raiden node configuration
+// and an http client.
 func NewOpener(config *config.Config, httpClient *http.Client) Opener {
 	return &defaultOpener{
 		baseClient: &util.BaseClient{
@@ -37,6 +41,7 @@ type defaultOpener struct {
 	baseClient *util.BaseClient
 }
 
+// Open will open a new payment channel given a token address, partner address, deposit, and settle timeout.
 func (opener *defaultOpener) Open(ctx context.Context, tokenAddress, partnerAddress common.Address, deposit, settleTimeout int64) (*Channel, error) {
 	var (
 		err     error

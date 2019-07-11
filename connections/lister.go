@@ -12,12 +12,16 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+// Connections represent a map of token network address to a Connection pointer.
 type Connections map[common.Address]*Connection
 
+// Lister is an interface to list all token network connections on a given Raiden node.
 type Lister interface {
 	List(ctx context.Context) (Connections, error)
 }
 
+// NewLister will create a default lister that will list out all the token network
+// connections for a given Raiden node configuration.
 func NewLister(config *config.Config, httpClient *http.Client) Lister {
 	return &defaultLister{
 		baseClient: &util.BaseClient{
@@ -31,6 +35,7 @@ type defaultLister struct {
 	baseClient *util.BaseClient
 }
 
+// List will list out the list of Connections for the provided Raiden node configuration.
 func (lister *defaultLister) List(ctx context.Context) (Connections, error) {
 	var (
 		err         error

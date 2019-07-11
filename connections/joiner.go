@@ -18,10 +18,14 @@ type joinRequest struct {
 	Funds int64 `json:"funds"`
 }
 
+// Joiner is an interface to allow for a Raiden node to join a new token network
+// with a given number of funds.
 type Joiner interface {
 	Join(ctx context.Context, tokenAddress common.Address, funds int64) error
 }
 
+// NewJoiner will create a default joiner that will allow access to join a new token
+// network for a Raiden node.
 func NewJoiner(config *config.Config, httpClient *http.Client) Joiner {
 	return &defaultJoiner{
 		baseClient: &util.BaseClient{
@@ -35,6 +39,7 @@ type defaultJoiner struct {
 	baseClient *util.BaseClient
 }
 
+// Join will join a new token network given a token network address and a given number of funds.
 func (joiner *defaultJoiner) Join(ctx context.Context, tokenAddress common.Address, funds int64) error {
 	var (
 		err          error
