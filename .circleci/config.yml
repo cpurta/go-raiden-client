@@ -21,6 +21,16 @@ jobs:
     steps:
       - checkout
       # specify any bash command here prefixed with `run: `
+      - run:
+         name: enable ipv6
+         command: |
+           cat <<'EOF' | sudo tee /etc/docker/daemon.json
+           {
+             "ipv6": true,
+             "fixed-cidr-v6": "2001:db8:1::/64"
+           }
+           EOF
+           sudo service docker restart
       - run: go get -v -t -d ./...
       - run: go test -v ./...
       - run:
