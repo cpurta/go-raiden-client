@@ -15,6 +15,29 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleLeaver() {
+	var (
+		connClient *Client
+		config     = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		addresses    []common.Address
+		err          error
+	)
+
+	connClient = NewClient(config, http.DefaultClient)
+
+	if addresses, err = connClient.Leave(context.Background(), tokenAddress); err != nil {
+		panic(fmt.Sprintf("unable to leave connection: %s", err.Error()))
+	}
+
+	for _, a := range addresses {
+		fmt.Println("address:", a.String())
+	}
+}
+
 func TestLeaver(t *testing.T) {
 	var (
 		localhostIP = "[::1]"
