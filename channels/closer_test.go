@@ -15,6 +15,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleCloser() {
+	var (
+		channelClient *Client
+		config        = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress   = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		partnerAddress = common.HexToAddress("0x1f7402f55e142820ea3812106d0657103fc1709e")
+		channel        *Channel
+		err            error
+	)
+
+	channelClient = NewClient(config, http.DefaultClient)
+
+	if channel, err = channelClient.Close(context.Background(), tokenAddress, partnerAddress); err != nil {
+		panic(fmt.Sprintf("unable to close channel: %s", err.Error()))
+	}
+
+	fmt.Printf("Close Channel Info: %+v\n", channel)
+}
+
 func TestCloser(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

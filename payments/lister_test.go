@@ -16,6 +16,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleLister() {
+	var (
+		paymentClient *Client
+		config        = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress  = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		targetAddress = common.HexToAddress("")
+		events        []*Event
+		err           error
+	)
+
+	paymentClient = NewClient(config, http.DefaultClient)
+
+	if events, err = paymentClient.List(context.Background(), tokenAddress, targetAddress); err != nil {
+		panic(fmt.Sprintf("unable to list payments: %s", err.Error()))
+	}
+
+	fmt.Printf("successfully listed payment: %+v\n", events)
+}
+
 func TestLister(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

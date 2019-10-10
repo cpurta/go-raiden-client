@@ -15,6 +15,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleGetter() {
+	var (
+		addressClient *Client
+		config        = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		address common.Address
+		err     error
+	)
+
+	addressClient = NewClient(config, http.DefaultClient)
+
+	if address, err = addressClient.Get(context.Background()); err != nil {
+		panic(fmt.Sprintf("unable to get ethereum address from raiden node: %s", err.Error()))
+	}
+
+	fmt.Println("raiden address:", address.String())
+}
+
 func TestNewGetter(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

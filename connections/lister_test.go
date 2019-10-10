@@ -15,6 +15,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleLister() {
+	var (
+		connClient *Client
+		config     = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		connections Connections
+		err         error
+	)
+
+	connClient = NewClient(config, http.DefaultClient)
+
+	if connections, err = connClient.List(context.Background()); err != nil {
+		panic(fmt.Sprintf("unable to leave connection: %s", err.Error()))
+	}
+
+	for address, conn := range connections {
+		fmt.Printf("%s: %+v\n", address.String(), conn)
+	}
+}
+
 func TestLister(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

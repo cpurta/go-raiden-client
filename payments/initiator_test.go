@@ -15,6 +15,29 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleInitiator() {
+	var (
+		paymentClient *Client
+		config        = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress  = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		targetAddress = common.HexToAddress("")
+		payment       *Payment
+		amount        = int64(1000)
+		err           error
+	)
+
+	paymentClient = NewClient(config, http.DefaultClient)
+
+	if payment, err = paymentClient.Initiate(context.Background(), tokenAddress, targetAddress, amount); err != nil {
+		panic(fmt.Sprintf("unable to initiate payment: %s", err.Error()))
+	}
+
+	fmt.Printf("successfully initiated payment: %+v\n", payment)
+}
+
 func TestInitiator(t *testing.T) {
 	var (
 		localhostIP = "[::1]"
