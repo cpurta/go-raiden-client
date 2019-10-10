@@ -15,6 +15,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleLister() {
+	var (
+		tokenClient *Client
+		config      = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		addresses []common.Address
+		err       error
+	)
+
+	tokenClient = NewClient(config, http.DefaultClient)
+
+	if addresses, err = tokenClient.List(context.Background()); err != nil {
+		panic(fmt.Sprintf("unable to list tokens: %s", err.Error()))
+	}
+
+	fmt.Printf("token addresses: %+v\n", addresses)
+}
+
 func TestLister(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

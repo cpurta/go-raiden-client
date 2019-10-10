@@ -15,6 +15,27 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExamplePartnerLister() {
+	var (
+		tokenClient *Client
+		config      = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		partners     []*Partner
+		err          error
+	)
+
+	tokenClient = NewClient(config, http.DefaultClient)
+
+	if partners, err = tokenClient.ListPartners(context.Background(), tokenAddress); err != nil {
+		panic(fmt.Sprintf("unable to list token partners: %s", err.Error()))
+	}
+
+	fmt.Printf("token partners: %+v\n", partners)
+}
+
 func TestPartnerLister(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

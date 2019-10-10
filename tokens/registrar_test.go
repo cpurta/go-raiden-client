@@ -15,6 +15,27 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleRegistrar() {
+	var (
+		tokenClient *Client
+		config      = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		address      common.Address
+		err          error
+	)
+
+	tokenClient = NewClient(config, http.DefaultClient)
+
+	if address, err = tokenClient.Register(context.Background(), tokenAddress); err != nil {
+		panic(fmt.Sprintf("unable to register token: %s", err.Error()))
+	}
+
+	fmt.Printf("token address: %+v\n", address)
+}
+
 func TestRegistrar(t *testing.T) {
 	var (
 		localhostIP = "[::1]"

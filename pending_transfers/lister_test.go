@@ -15,6 +15,40 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func ExampleLister() {
+	var (
+		transfersClient *Client
+		config          = &config.Config{
+			Host:       "http://localhost:5001",
+			APIVersion: "v1",
+		}
+		tokenAddress   = common.HexToAddress("0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") // DAI Stablecoin
+		partnerAddress = common.HexToAddress("")
+		transfers      []*Transfer
+		err            error
+	)
+
+	transfersClient = NewClient(config, http.DefaultClient)
+
+	if transfers, err = transfersClient.ListAll(context.Background()); err != nil {
+		panic(fmt.Sprintf("unable to list all pending transfers: %s", err.Error()))
+	}
+
+	fmt.Printf("all pending transfers: %+v\n", transfers)
+
+	if transfers, err = transfersClient.ListToken(context.Background(), tokenAddress); err != nil {
+		panic(fmt.Sprintf("unable to list token pending transfers: %s", err.Error()))
+	}
+
+	fmt.Printf("token pending transfers: %+v\n", transfers)
+
+	if transfers, err = transfersClient.ListChannel(context.Background(), tokenAddress, partnerAddress); err != nil {
+		panic(fmt.Sprintf("unable to list channel pending transfers: %s", err.Error()))
+	}
+
+	fmt.Printf("channel pending transfers: %+v\n", transfers)
+}
+
 func TestLister(t *testing.T) {
 	var (
 		localhostIP = "[::1]"
